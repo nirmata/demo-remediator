@@ -16,9 +16,6 @@ spec:
       labels:
         app: nginx
     spec:
-      hostNetwork: true
-      hostPID: true
-      hostIPC: true
       hostUsers: false
       securityContext:
         seLinuxOptions:
