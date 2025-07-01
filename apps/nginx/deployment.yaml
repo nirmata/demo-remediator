@@ -4,6 +4,8 @@ metadata:
   name: nginx
   labels:
     app: nginx
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/nginx: unconfined  
 spec:
   replicas: 1
   selector:
@@ -14,9 +16,38 @@ spec:
       labels:
         app: nginx
     spec:
+      hostNetwork: true         
+      hostPID: true             
+      hostIPC: true             
+      securityContext:
+        seLinuxOptions:         
+          user: "system_u"
+          role: "system_r"
+          type: "invalid_t"
+        seccompProfile:         
+          type: Unconfined
+        sysctls:                
+        - name: kernel.core_pattern
+          value: core
+      volumes:                  
+      - name: host-vol
+        hostPath:
+          path: /etc
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:latest     
         ports:
         - containerPort: 80
-
+          hostPort: 8080        
+        securityContext:
+          privileged: true      
+          procMount: Unmasked   
+          capabilities:         
+            add:
+            - SYS_ADMIN
+          seLinuxOptions:
+            user: "system_u"    
+            role: "system_r"
+            type: "invalid_t"
+          seccompProfile:
+            type: Unconfined
