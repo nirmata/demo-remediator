@@ -16,14 +16,6 @@ spec:
       labels:
         app: nginx
     spec:
-      hostUsers: false
-      securityContext:
-        seLinuxOptions:
-          user: "system_u"
-          role: "system_r"
-          type: "invalid_t"
-        seccompProfile:
-          type: Unconfined
       volumes:
       - name: host-vol
         hostPath:
@@ -36,13 +28,6 @@ spec:
           hostPort: 80
         securityContext:
           privileged: true
-          procMount: Unmasked
           capabilities:
             add:
             - SYS_ADMIN
-          seLinuxOptions:
-            user: "system_u"
-            role: "system_r"
-            type: "invalid_t"
-          seccompProfile:
-            type: Unconfined
