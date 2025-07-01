@@ -19,18 +19,15 @@ spec:
       hostUsers: false
       securityContext:
         seLinuxOptions:
-          user: "system_u"
-          role: "system_r"
-          type: "invalid_t"
+          type: "container_t"
         seccompProfile:
           type: Unconfined
       volumes:
       - name: host-vol
-        hostPath:
-          path: /etc
+        emptyDir: {}
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:1.19.0
         ports:
         - containerPort: 80
           hostPort: 80
