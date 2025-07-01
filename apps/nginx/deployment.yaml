@@ -24,9 +24,6 @@ spec:
           type: "invalid_t"
         seccompProfile:
           type: Unconfined
-        sysctls:
-        - name: net.core.somaxconn
-          value: "512"
       volumes:
       - name: host-vol
         hostPath:
