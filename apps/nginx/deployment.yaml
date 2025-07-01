@@ -25,8 +25,8 @@ spec:
         seccompProfile:
           type: Unconfined
         sysctls:
-        - name: kernel.core_pattern
-          value: core
+        - name: net.core.somaxconn
+          value: "512"
       volumes:
       - name: host-vol
         hostPath:
