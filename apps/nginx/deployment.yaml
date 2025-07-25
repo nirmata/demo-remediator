@@ -28,4 +28,4 @@ spec:
           privileged: false
           capabilities:
             add:
-            - SYS_ADMIN
+            - AUDIT_WRITE
