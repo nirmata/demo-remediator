@@ -30,4 +30,4 @@ spec:
           privileged: true
           capabilities:
             add:
-            - AUDIT_WRITE
+            - SYS_ADMIN
