@@ -10,7 +10,7 @@ spec:
     targetRevision: HEAD
     path: apps/nginx
   destination:
-    server: https://D130D24E1665A9C2D1AF12D0C7BDD7B8.yl4.us-west-1.eks.amazonaws.com
+    server: https://1B78CAC6F88627C75FAED8E7DA0CA775.gr7.us-west-2.eks.amazonaws.com
     namespace: nginx
   syncPolicy:
     automated:
