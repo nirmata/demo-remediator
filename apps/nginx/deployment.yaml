@@ -15,9 +15,7 @@ spec:
       labels:
         app: nginx
     spec:
-      volumes:
-      - name: host-vol
-        emptyDir: {}
+      volumes: []
       containers:
       - name: nginx
         image: nginx:latest
@@ -30,3 +28,6 @@ spec:
           runAsUser: 1000
           seccompProfile:
             type: RuntimeDefault
+          capabilities:
+            drop:
+            - ALL
