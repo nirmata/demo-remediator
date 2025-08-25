@@ -7,14 +7,14 @@ spec:
   project: default
   source:
     repoURL: https://github.com/nirmata/demo-remediator.git
-    targetRevision: HEAD
+    targetRevision: helm_chart
     path: nginx-chart
     helm:
       valueFiles:
         - values.yaml
   destination:
     server: https://1B78CAC6F88627C75FAED8E7DA0CA775.gr7.us-west-2.eks.amazonaws.com
-    namespace: nginx
+    namespace: nginx-helm
   syncPolicy:
     automated:
       prune: true
