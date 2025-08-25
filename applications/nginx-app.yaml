@@ -8,7 +8,10 @@ spec:
   source:
     repoURL: https://github.com/nirmata/demo-remediator.git
     targetRevision: HEAD
-    path: apps/nginx
+    path: nginx-chart
+    helm:
+      valueFiles:
+        - values.yaml
   destination:
     server: https://1B78CAC6F88627C75FAED8E7DA0CA775.gr7.us-west-2.eks.amazonaws.com
     namespace: nginx
@@ -18,4 +21,3 @@ spec:
       selfHeal: true
     syncOptions:
     - CreateNamespace=true
-

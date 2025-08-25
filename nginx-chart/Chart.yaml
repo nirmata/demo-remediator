@@ -1,0 +1,14 @@
+apiVersion: v2
+name: nginx-chart
+description: A Helm chart for nginx deployment with security configurations
+type: application
+version: 0.1.0
+appVersion: "latest"
+keywords:
+  - nginx
+  - web
+  - server
+home: https://github.com/nirmata/demo-remediator
+maintainers:
+  - name: Nirmata
+    email: support@nirmata.com
