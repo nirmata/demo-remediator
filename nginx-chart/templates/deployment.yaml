@@ -17,7 +17,6 @@ spec:
     metadata:
       labels:
         {{- include "nginx-chart.selectorLabels" . | nindent 8 }}
-      {{- end }}
     spec:
       {{- if .Values.volumes.hostPath.enabled }}
       volumes:
