@@ -29,14 +29,18 @@ spec:
         - containerPort: {{ .Values.containerPort }}
         securityContext:
           privileged: false
-          runAsNonRoot: true
-          allowPrivilegeEscalation: false
           {{- if .Values.securityContext.capabilities }}
           capabilities:
-            drop: ["ALL"]
+            {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
           {{- end }}
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         {{- if .Values.volumes.hostPath.enabled }}
-        volumeMounts: []
+        volumeMounts:
+        - name: {{ .Values.volumes.hostPath.name }}
+          mountPath: /mnt/host-vol
         {{- end }}
         {{- with .Values.resources }}
         resources:
