@@ -19,6 +19,7 @@ spec:
         {{- include "nginx-chart.selectorLabels" . | nindent 8 }}
     spec:
       {{- if .Values.volumes.hostPath.enabled }}
+      volumes: []
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
@@ -26,15 +27,16 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.containerPort }}
-          {{- if .Values.hostPort }}
-          {{- end }}
         securityContext:
           privileged: false
           runAsNonRoot: true
           allowPrivilegeEscalation: false
           {{- if .Values.securityContext.capabilities }}
+          capabilities:
+            drop: ["ALL"]
           {{- end }}
         {{- if .Values.volumes.hostPath.enabled }}
+        volumeMounts: []
         {{- end }}
         {{- with .Values.resources }}
         resources:
