@@ -37,6 +37,8 @@ spec:
           capabilities:
             {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
           {{- end }}
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
         {{- if .Values.volumes.hostPath.enabled }}
         volumeMounts:
         - name: {{ .Values.volumes.hostPath.name }}
