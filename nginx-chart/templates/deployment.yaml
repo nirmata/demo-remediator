@@ -19,8 +19,9 @@ spec:
         {{- include "nginx-chart.selectorLabels" . | nindent 8 }}
     spec:
       {{- if .Values.volumes.hostPath.enabled }}
-      volumes: []
-      # Removed hostPath volume as it violates security policy
+      volumes:
+      - name: {{ .Values.volumes.hostPath.name }}
+        emptyDir: {}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
@@ -32,10 +33,8 @@ spec:
           privileged: false
           {{- if .Values.securityContext.capabilities }}
           capabilities:
-            {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
+            drop: ["ALL"]
           {{- end }}
-          runAsNonRoot: true
-          allowPrivilegeEscalation: false
         {{- if .Values.volumes.hostPath.enabled }}
         volumeMounts:
         - name: {{ .Values.volumes.hostPath.name }}
