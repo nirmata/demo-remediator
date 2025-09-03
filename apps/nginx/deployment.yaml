@@ -14,7 +14,9 @@ spec:
       labels:
         app: nginx
     spec:
-      volumes: []
+      volumes:
+      - name: host-vol
+        emptyDir: {}
       containers:
       - name: nginx
         image: nginx:latest
