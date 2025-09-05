@@ -4,6 +4,7 @@ metadata:
   name: nginx
   labels:
     app: nginx
+  annotations: {}
 spec:
   replicas: 1
   selector:
@@ -16,7 +17,8 @@ spec:
     spec:
       volumes:
       - name: host-vol
-        emptyDir: {}
+        hostPath:
+          path: /etc
       containers:
       - name: nginx
         image: nginx:latest
@@ -24,6 +26,8 @@ spec:
         - containerPort: 80
         securityContext:
           privileged: false
-          capabilities:
-            drop:
-            - ALL
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
