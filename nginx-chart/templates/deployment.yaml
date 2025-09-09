@@ -18,6 +18,11 @@ spec:
       labels:
         {{- include "nginx-chart.selectorLabels" . | nindent 8 }}
     spec:
+      {{- if .Values.volumes.hostPath.enabled }}
+      volumes:
+      - name: {{ .Values.volumes.hostPath.name }}
+        emptyDir: {}
+      {{- end }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -25,11 +30,17 @@ spec:
         ports:
         - containerPort: {{ .Values.containerPort }}
         securityContext:
-          privileged: false
+          privileged: {{ .Values.securityContext.privileged }}
           {{- if .Values.securityContext.capabilities }}
           capabilities:
             {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
           {{- end }}
+          allowPrivilegeEscalation: false
+        {{- if .Values.volumes.hostPath.enabled }}
+        volumeMounts:
+        - name: {{ .Values.volumes.hostPath.name }}
+          mountPath: /mnt/host-vol
+        {{- end }}
         {{- with .Values.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
