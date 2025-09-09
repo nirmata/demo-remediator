@@ -35,6 +35,9 @@ spec:
             {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
           {{- end }}
         {{- if .Values.volumes.hostPath.enabled }}
+        volumeMounts:
+        - name: {{ .Values.volumes.hostPath.name }}
+          mountPath: /mnt/host-vol
         {{- end }}
         {{- with .Values.resources }}
         resources:
