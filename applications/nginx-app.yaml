@@ -13,7 +13,7 @@ spec:
       valueFiles:
         - values.yaml
   destination:
-    server: https://E5D5394B9E5D3CE9309760975DC52F98.yl4.us-west-1.eks.amazonaws.com
+    server: https://29E03EDE3DF79F98DFB632F62A5BF244.sk1.us-west-1.eks.amazonaws.com
     namespace: nginx-helm
   syncPolicy:
     automated:
