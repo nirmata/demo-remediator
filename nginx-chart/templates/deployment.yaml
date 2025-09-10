@@ -29,13 +29,14 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.containerPort }}
+          {{- if .Values.hostPort }}
+          {{- end }}
         securityContext:
-          privileged: {{ .Values.securityContext.privileged }}
+          privileged: false
           {{- if .Values.securityContext.capabilities }}
           capabilities:
             {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
           {{- end }}
-          allowPrivilegeEscalation: false
         {{- if .Values.volumes.hostPath.enabled }}
         volumeMounts:
         - name: {{ .Values.volumes.hostPath.name }}
