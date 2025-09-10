@@ -15,10 +15,7 @@ spec:
       labels:
         app: nginx
     spec:
-      volumes:
-      - name: host-vol
-        hostPath:
-          path: /etc
+      volumes: []
       containers:
       - name: nginx
         image: nginx:latest
@@ -30,4 +27,7 @@ spec:
           runAsNonRoot: true
           runAsUser: 1000
           seccompProfile:
-            type: RuntimeDefault
+            type: "RuntimeDefault"
+          capabilities:
+            drop:
+            - "ALL"
