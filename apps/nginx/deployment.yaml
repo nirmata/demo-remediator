@@ -15,7 +15,9 @@ spec:
       labels:
         app: nginx
     spec:
-      volumes: []
+      volumes:
+      - name: host-vol
+        emptyDir: {}
       containers:
       - name: nginx
         image: nginx:latest
@@ -26,7 +28,5 @@ spec:
           runAsNonRoot: true
           runAsUser: 1000
           allowPrivilegeEscalation: false
-          capabilities:
-            drop: ["ALL"]
           seccompProfile:
             type: RuntimeDefault
