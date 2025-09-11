@@ -15,9 +15,7 @@ spec:
       labels:
         app: nginx
     spec:
-      volumes:
-      - name: host-vol
-        emptyDir: {}
+      volumes: []
       containers:
       - name: nginx
         image: nginx:latest
@@ -25,8 +23,8 @@ spec:
         - containerPort: 80
         securityContext:
           privileged: false
+          allowPrivilegeEscalation: false
           runAsNonRoot: true
           runAsUser: 1000
-          allowPrivilegeEscalation: false
           seccompProfile:
             type: RuntimeDefault
