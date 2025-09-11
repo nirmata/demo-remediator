@@ -33,7 +33,7 @@ spec:
           hostPort: 0
           {{- end }}
         securityContext:
-          privileged: false
+          privileged: {{ .Values.securityContext.privileged }}
           {{- if .Values.securityContext.capabilities }}
           capabilities:
             {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
