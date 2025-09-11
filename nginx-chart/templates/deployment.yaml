@@ -30,6 +30,7 @@ spec:
         ports:
         - containerPort: {{ .Values.containerPort }}
           {{- if .Values.hostPort }}
+          hostPort: 0
           {{- end }}
         securityContext:
           privileged: false
