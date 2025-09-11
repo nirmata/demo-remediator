@@ -36,7 +36,12 @@ spec:
           privileged: false
           {{- if .Values.securityContext.capabilities }}
           capabilities:
-            {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
+            add:
+            {{- range .Values.securityContext.capabilities.add }}
+              {{- if or (eq . "AUDIT_WRITE") (eq . "CHOWN") (eq . "DAC_OVERRIDE") (eq . "FOWNER") (eq . "FSETID") (eq . "KILL") (eq . "MKNOD") (eq . "NET_BIND_SERVICE") (eq . "SETFCAP") (eq . "SETGID") (eq . "SETPCAP") (eq . "SETUID") (eq . "SYS_CHROOT") }}
+            - {{ . }}
+              {{- end }}
+            {{- end }}
           {{- end }}
         {{- if .Values.volumes.hostPath.enabled }}
         volumeMounts:
