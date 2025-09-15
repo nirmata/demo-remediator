@@ -8,6 +8,9 @@ metadata:
     container.apparmor.security.beta.kubernetes.io/nginx: unconfined
 spec:
   replicas: 1
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
   selector:
     matchLabels:
       app: nginx
@@ -26,4 +29,3 @@ spec:
         - containerPort: 80
         securityContext:
           privileged: false
-          capabilities: {}
