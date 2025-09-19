@@ -24,3 +24,6 @@ spec:
         - containerPort: 80
         securityContext:
           privileged: false
+          capabilities:
+            drop:
+            - ALL
