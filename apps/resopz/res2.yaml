@@ -19,7 +19,7 @@ spec:
           resources:
             requests:
               cpu: "200m"
-              memory: "200Mi"   # Fixed to comply with Kyverno policy
+              memory: "200Mi"   # Reduced to comply with Kyverno rule
             limits:
               cpu: "200m"
               memory: "500Mi"
