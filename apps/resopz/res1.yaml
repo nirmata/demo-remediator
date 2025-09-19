@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memory-test
+  namespace: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memory-test
+  template:
+    metadata:
+      labels:
+        app: memory-test
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "275"   # This should trigger Kyverno rule
+            limits:
+              cpu: "200m"
+              memory: "500Mi"

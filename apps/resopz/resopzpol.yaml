@@ -1,0 +1,23 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: check-memory-requests
+spec:
+  validationFailureAction: audit # change to enforce if you want to block
+  background: true
+  rules:
+    - name: validate-memory-request
+      match:
+        resources:
+          kinds:
+            - Pod
+      validate:
+        foreach:
+        - list: "request.object.spec.containers[]"
+          deny:
+            conditions:
+              any:
+                - key: "{{ element.resources.requests.memory }}"
+                  operator: GreaterThan
+                  value: 200
+                  message: "Memory request exceeds 200Mi. Suggestion: reduce the request from {{ element.resources.requests.memory }} to {{ divide(element.resources.requests.memory, `2`) }}Mi."
