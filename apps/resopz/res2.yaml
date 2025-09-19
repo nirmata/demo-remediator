@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: memory-test-2
-  namespace: demo
+  namespace: resopz
 spec:
   replicas: 1
   selector:
