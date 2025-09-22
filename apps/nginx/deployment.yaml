@@ -4,7 +4,9 @@ metadata:
   name: nginx
   labels:
     app: nginx
-  annotations: {}
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/nginx: unconfined
+    container.apparmor.security.beta.kubernetes.io/nginx: runtime/default
 spec:
   replicas: 1
   selector:
@@ -23,14 +25,12 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            memory: "100Mi"
           hostPort: 0
         securityContext:
           privileged: false
-          capabilities: {}
-        resources:
-          requests:
-            memory: "200Mi"
-            cpu: "100m"
-          limits:
-            memory: "300Mi"
-            cpu: "200m"
+          capabilities:
+            add:
+            - NET_BIND_SERVICE
