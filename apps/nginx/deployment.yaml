@@ -2,10 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
+  namespace: staging
   labels:
     app: nginx
-  annotations:
-    container.apparmor.security.beta.kubernetes.io/nginx: unconfined
 spec:
   replicas: 1
   selector:
@@ -16,16 +15,20 @@ spec:
       labels:
         app: nginx
     spec:
-      volumes:
-      - name: host-vol
-        emptyDir: {}
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: nginx
         image: nginx:latest
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+            drop: ["ALL"]
         ports:
         - containerPort: 80
-          hostPort: 0
-        securityContext:
-          privileged: false
-          capabilities:
-            add: []
+
