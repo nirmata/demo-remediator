@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
-  namespace: staging
   labels:
     app: nginx
 spec:
@@ -17,18 +16,25 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
+        runAsUser: 1000
         seccompProfile:
           type: RuntimeDefault
+      volumes:
+      - name: host-vol
+        hostPath:
+          path: /etc
       containers:
       - name: nginx
         image: nginx:latest
+        ports:
+        - containerPort: 80
+          protocol: TCP
         securityContext:
           allowPrivilegeEscalation: false
+          privileged: false
+          capabilities:
+            add: []
+            drop: ["ALL"]
           runAsNonRoot: true
           seccompProfile:
             type: RuntimeDefault
-          capabilities:
-            drop: ["ALL"]
-        ports:
-        - containerPort: 80
-
