@@ -39,7 +39,7 @@ volumes:
 
 # Pod annotations
 podAnnotations:
-  container.apparmor.security.beta.kubernetes.io/nginx: unconfined
+  container.apparmor.security.beta.kubernetes.io/nginx-chart: unconfined
 
 # Resource limits and requests
 resources: {}
