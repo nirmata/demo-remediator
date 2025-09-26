@@ -4,9 +4,13 @@ metadata:
   name: nginx
   labels:
     app: nginx
-  annotations: {}
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/nginx: unconfined
 spec:
   replicas: 1
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
   selector:
     matchLabels:
       app: nginx
@@ -15,9 +19,6 @@ spec:
       labels:
         app: nginx
     spec:
-      securityContext:
-        seccompProfile:
-          type: RuntimeDefault
       volumes:
       - name: host-vol
         emptyDir: {}
@@ -28,5 +29,3 @@ spec:
         - containerPort: 80
         securityContext:
           privileged: false
-          seccompProfile:
-            type: RuntimeDefault
