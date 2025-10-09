@@ -15,14 +15,13 @@ spec:
         {{- include "nginx-chart.selectorLabels" . | nindent 8 }}
       {{- with .Values.podAnnotations }}
       annotations:
-        container.apparmor.security.beta.kubernetes.io/{{ .Chart.Name }}: runtime/default
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
       {{- if .Values.volumes.hostPath.enabled }}
       volumes:
-      - name: {{ .Values.volumes.hostPath.name }}
-        emptyDir: {}
+  - name: {{ .Values.volumes.hostPath.name }}
+    emptyDir: {}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
@@ -43,6 +42,7 @@ spec:
         volumeMounts:
         - name: {{ .Values.volumes.hostPath.name }}
           mountPath: /mnt/host-vol
+          readOnly: true
         {{- end }}
         {{- with .Values.resources }}
         resources:
