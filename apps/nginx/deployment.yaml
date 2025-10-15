@@ -4,7 +4,8 @@ metadata:
   name: nginx
   labels:
     app: nginx
-  annotations: {}
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/nginx: unconfined
 spec:
   replicas: 1
   selector:
@@ -26,6 +27,3 @@ spec:
           hostPort: 0
         securityContext:
           privileged: false
-          capabilities:
-            add:
-            - NET_BIND_SERVICE
