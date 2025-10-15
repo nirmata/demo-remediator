@@ -18,12 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-      {{- if .Values.volumes.hostPath.enabled }}
-      volumes:
-      - name: {{ .Values.volumes.hostPath.name }}
-        hostPath:
-          path: {{ .Values.volumes.hostPath.path }}
-      {{- end }}
+      volumes: []
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -31,7 +26,7 @@ spec:
         ports:
         - containerPort: {{ .Values.containerPort }}
           {{- if .Values.hostPort }}
-          hostPort: {{ .Values.hostPort }}
+          hostPort: 0
           {{- end }}
         securityContext:
           privileged: {{ .Values.securityContext.privileged }}
