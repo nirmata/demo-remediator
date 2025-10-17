@@ -16,13 +16,13 @@ spec:
       {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
+        container.apparmor.security.beta.kubernetes.io/{{ .Chart.Name }}: runtime/default
       {{- end }}
     spec:
       {{- if .Values.volumes.hostPath.enabled }}
       volumes:
       - name: {{ .Values.volumes.hostPath.name }}
-        hostPath:
-          path: {{ .Values.volumes.hostPath.path }}
+        emptyDir: {}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
@@ -31,10 +31,9 @@ spec:
         ports:
         - containerPort: {{ .Values.containerPort }}
           {{- if .Values.hostPort }}
-          hostPort: {{ .Values.hostPort }}
           {{- end }}
         securityContext:
-          privileged: {{ .Values.securityContext.privileged }}
+          privileged: false
           {{- if .Values.securityContext.capabilities }}
           capabilities:
             {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
