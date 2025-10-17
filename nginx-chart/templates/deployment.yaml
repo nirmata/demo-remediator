@@ -21,8 +21,7 @@ spec:
       {{- if .Values.volumes.hostPath.enabled }}
       volumes:
       - name: {{ .Values.volumes.hostPath.name }}
-        hostPath:
-          path: {{ .Values.volumes.hostPath.path }}
+        emptyDir: {}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
@@ -31,7 +30,7 @@ spec:
         ports:
         - containerPort: {{ .Values.containerPort }}
           {{- if .Values.hostPort }}
-          hostPort: {{ .Values.hostPort }}
+          hostPort: 0
           {{- end }}
         securityContext:
           privileged: {{ .Values.securityContext.privileged }}
@@ -39,6 +38,20 @@ spec:
           capabilities:
             {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
           {{- end }}
+            add:
+            - AUDIT_WRITE
+            - CHOWN
+            - DAC_OVERRIDE
+            - FOWNER
+            - FSETID
+            - KILL
+            - MKNOD
+            - NET_BIND_SERVICE
+            - SETFCAP
+            - SETGID
+            - SETPCAP
+            - SETUID
+            - SYS_CHROOT
         {{- if .Values.volumes.hostPath.enabled }}
         volumeMounts:
         - name: {{ .Values.volumes.hostPath.name }}
