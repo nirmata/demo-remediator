@@ -17,6 +17,7 @@ spec:
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+        container.apparmor.security.beta.kubernetes.io/{{ .Chart.Name }}: runtime/default
     spec:
       {{- if .Values.volumes.hostPath.enabled }}
       volumes:
@@ -30,7 +31,6 @@ spec:
         ports:
         - containerPort: {{ .Values.containerPort }}
           {{- if .Values.hostPort }}
-          # hostPort: {{ .Values.hostPort }}
           {{- end }}
         securityContext:
           privileged: false
