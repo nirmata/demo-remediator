@@ -18,16 +18,13 @@ spec:
     spec:
       volumes:
       - name: host-vol
-        hostPath:
-          path: /etc
+        emptyDir: {}
       containers:
       - name: nginx
         image: nginx:latest
         ports:
         - containerPort: 80
-          hostPort: 80
+          hostPort: 0
         securityContext:
-          privileged: true
-          capabilities:
-            add:
-            - SYS_ADMIN
+          privileged: false
+          capabilities: {}
