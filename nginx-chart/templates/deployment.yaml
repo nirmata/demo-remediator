@@ -19,10 +19,7 @@ spec:
       {{- end }}
     spec:
       {{- if .Values.volumes.hostPath.enabled }}
-      volumes:
-      - name: {{ .Values.volumes.hostPath.name }}
-        hostPath:
-          path: {{ .Values.volumes.hostPath.path }}
+      volumes: []
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
@@ -31,7 +28,7 @@ spec:
         ports:
         - containerPort: {{ .Values.containerPort }}
           {{- if .Values.hostPort }}
-          hostPort: {{ .Values.hostPort }}
+          hostPort: 0
           {{- end }}
         securityContext:
           privileged: {{ .Values.securityContext.privileged }}
@@ -40,9 +37,7 @@ spec:
             {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
           {{- end }}
         {{- if .Values.volumes.hostPath.enabled }}
-        volumeMounts:
-        - name: {{ .Values.volumes.hostPath.name }}
-          mountPath: /mnt/host-vol
+        volumeMounts: []
         {{- end }}
         {{- with .Values.resources }}
         resources:
