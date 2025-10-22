@@ -30,7 +30,6 @@ spec:
         ports:
         - containerPort: {{ .Values.containerPort }}
           {{- if .Values.hostPort }}
-          # hostPort: {{ .Values.hostPort }} # Removed: hostPort is disallowed by policy
           {{- end }}
         securityContext:
           privileged: false
