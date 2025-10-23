@@ -29,6 +29,9 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.containerPort }}
+          {{- if .Values.hostPort }}
+          # hostPort removed for policy compliance
+          {{- end }}
         securityContext:
           privileged: false
           {{- if .Values.securityContext.capabilities }}
