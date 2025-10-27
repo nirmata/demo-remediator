@@ -4,6 +4,7 @@ metadata:
   name: nginx
   labels:
     app: nginx
+  annotations: {}
 spec:
   replicas: 1
   selector:
@@ -14,21 +15,12 @@ spec:
       labels:
         app: nginx
     spec:
-      volumes:
-      - name: host-vol
-        emptyDir: {}
+      volumes: []
       containers:
       - name: nginx
         image: nginx:latest
         ports:
         - containerPort: 80
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "128Mi"
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
         securityContext:
           privileged: false
           allowPrivilegeEscalation: false
