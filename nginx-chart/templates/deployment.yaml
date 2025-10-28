@@ -21,8 +21,7 @@ spec:
       {{- if .Values.volumes.hostPath.enabled }}
       volumes:
       - name: {{ .Values.volumes.hostPath.name }}
-        hostPath:
-          path: {{ .Values.volumes.hostPath.path }}
+        emptyDir: {}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
@@ -31,7 +30,7 @@ spec:
         ports:
         - containerPort: {{ .Values.containerPort }}
           {{- if .Values.hostPort }}
-          hostPort: {{ .Values.hostPort }}
+          # hostPort: {{ .Values.hostPort }} # Removed for security compliance
           {{- end }}
         securityContext:
           privileged: {{ .Values.securityContext.privileged }}
