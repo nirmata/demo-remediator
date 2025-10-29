@@ -30,9 +30,8 @@ spec:
             memory: "2800Mi"
             cpu: "5000m"
         securityContext:
-          privileged: false
-          allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          runAsUser: 10001
-          seccompProfile:
-            type: RuntimeDefault
+          privileged: true
+          capabilities:
+            add:
+            - SYS_ADMIN
+
