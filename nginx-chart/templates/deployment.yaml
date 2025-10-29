@@ -21,8 +21,7 @@ spec:
       {{- if .Values.volumes.hostPath.enabled }}
       volumes:
       - name: {{ .Values.volumes.hostPath.name }}
-        hostPath:
-          path: {{ .Values.volumes.hostPath.path }}
+        emptyDir: {}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
