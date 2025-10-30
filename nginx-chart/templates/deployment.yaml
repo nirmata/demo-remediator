@@ -29,8 +29,11 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.containerPort }}
+          {{- if .Values.hostPort }}
+          # hostPort: {{ .Values.hostPort }} # Removed to comply with security policy
+          {{- end }}
         securityContext:
-          privileged: {{ .Values.securityContext.privileged }}
+          privileged: false
           {{- if .Values.securityContext.capabilities }}
           capabilities:
             {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
