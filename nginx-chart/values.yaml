@@ -1,58 +1,36 @@
-# Default values for nginx-chart.
-
-replicaCount: 1
-
-metadata:
-  name: nginx-helm-demo
-  namespace: nginx-helm
-
-image:
-  repository: nginx
-  pullPolicy: IfNotPresent
-  tag: "latest"
-
-nameOverride: ""
-fullnameOverride: ""
-
-service:
-  type: ClusterIP
-  port: 81
-  targetPort: 81
-
-# Security context settings
-securityContext:
-  privileged: true
-  capabilities:
-    add:
-      - SYS_ADMIN
-
-# Container port configuration
-containerPort: 81
-hostPort: 81
-
-# Volume configuration
-volumes:
-  hostPath:
-    enabled: true
-    path: /etc
-    name: host-vol
-
-# Pod annotations
-podAnnotations:
-  container.apparmor.security.beta.kubernetes.io/nginx-chart: unconfined
-
-# Resource limits and requests
-resources: {}
-
-# Node selector
-nodeSelector: {}
-
-# Tolerations
-tolerations: []
-
-# Affinity
 affinity: {}
-
-# Labels
+containerPort: 81
+fullnameOverride: ""
+hostPort: 81
+image:
+    pullPolicy: IfNotPresent
+    repository: nginx
+    tag: latest
 labels:
-  app: nginx
+    app: nginx
+metadata:
+    name: nginx-helm-demo
+    namespace: nginx-helm
+nameOverride: ""
+nodeSelector: {}
+podAnnotations:
+    container.apparmor.security.beta.kubernetes.io/nginx-chart: unconfined
+replicaCount: 1
+resources: {}
+securityContext:
+    capabilities:
+        add:
+            - SYS_ADMIN
+    privileged: true
+service:
+    port: 81
+    targetPort: 81
+    type: ClusterIP
+tolerations: []
+volumes:
+    hostPath:
+        enabled: true
+        name:
+            - emptyDir: {}
+              name: host-vol
+        path: /etc
