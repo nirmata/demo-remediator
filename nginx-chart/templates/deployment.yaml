@@ -1,3 +1,8 @@
+# REMEDIATION NOTE: The following changes should be made to values.yaml:
+# Updated values.yaml with the following changes:
+# - securityContext.privileged: true -> false
+# 
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
