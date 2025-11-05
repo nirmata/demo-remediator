@@ -19,10 +19,10 @@ spec:
       {{- end }}
     spec:
       {{- if .Values.volumes.hostPath.enabled }}
-      {{- if .Values.volumes.emptyDir.enabled }}
       volumes:
-      - name: {{ .Values.volumes.emptyDir.name | default .Values.volumes.hostPath.name }}
-        emptyDir: {}
+      - name: {{ .Values.volumes.hostPath.name }}
+        hostPath:
+          path: {{ .Values.volumes.hostPath.path }}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
@@ -30,15 +30,18 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.containerPort }}
+          {{- if .Values.hostPort }}
+          hostPort: {{ .Values.hostPort }}
+          {{- end }}
         securityContext:
-          privileged: false
+          privileged: {{ .Values.securityContext.privileged }}
           {{- if .Values.securityContext.capabilities }}
           capabilities:
             {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
           {{- end }}
         {{- if .Values.volumes.hostPath.enabled }}
         volumeMounts:
-        - name: {{ .Values.volumes.emptyDir.name | default .Values.volumes.hostPath.name }}
+        - name: {{ .Values.volumes.hostPath.name }}
           mountPath: /mnt/host-vol
         {{- end }}
         {{- with .Values.resources }}
