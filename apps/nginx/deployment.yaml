@@ -5,7 +5,8 @@ metadata:
   labels:
     app: nginx
   annotations:
-    container.apparmor.security.beta.kubernetes.io/nginx: unconfined
+    # Fixed AppArmor annotation to use compliant profile
+    container.apparmor.security.beta.kubernetes.io/nginx: runtime/default
 spec:
   replicas: 1
   selector:
@@ -16,18 +17,48 @@ spec:
       labels:
         app: nginx
     spec:
+      # Removed hostPath volume and replaced with emptyDir volumes
       volumes:
-      - name: host-vol
-        hostPath:
-          path: /etc
+      - name: nginx-cache
+        emptyDir: {}
+      - name: nginx-run
+        emptyDir: {}
+      - name: nginx-tmp
+        emptyDir: {}
       containers:
       - name: nginx
         image: nginx:latest
         ports:
         - containerPort: 80
-          hostPort: 80
+          # Removed hostPort to comply with disallow-host-ports policy
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
         securityContext:
-          privileged: true
+          # Removed privileged: true and excessive capabilities
+          privileged: false
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 101
+          runAsGroup: 101
           capabilities:
+            drop:
+            - ALL
+            # Only add minimal required capabilities from allowed list
             add:
-            - SYS_ADMIN
+            - NET_BIND_SERVICE
+          seccompProfile:
+            type: RuntimeDefault
+        # Add volume mounts for writable directories
+        volumeMounts:
+        - name: nginx-cache
+          mountPath: /var/cache/nginx
+        - name: nginx-run
+          mountPath: /var/run
+        - name: nginx-tmp
+          mountPath: /tmp
