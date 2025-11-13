@@ -1,0 +1,58 @@
+# Default values for nginx-chart.
+
+replicaCount: 1
+
+metadata:
+  name: nginx-helm-demo
+  namespace: nginx-helm
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 81
+  targetPort: 81
+
+# Security context settings
+securityContext:
+  privileged: true
+  capabilities:
+    add:
+      - SYS_ADMIN
+
+# Container port configuration
+containerPort: 81
+hostPort: 81
+
+# Volume configuration
+volumes:
+  hostPath:
+    enabled: true
+    path: /etc
+    name: host-vol
+
+# Pod annotations
+podAnnotations:
+  container.apparmor.security.beta.kubernetes.io/nginx-chart: unconfined
+
+# Resource limits and requests
+resources: {}
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}
+
+# Labels
+labels:
+  app: nginx
