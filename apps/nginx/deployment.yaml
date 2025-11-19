@@ -34,7 +34,8 @@ spec:
             memory: "2800Mi"
             cpu: "5000m"
         securityContext:
-          privileged: true
+          privileged: false
+          allowPrivilegeEscalation: false
           capabilities:
-            add:
-            - SYS_ADMIN
+            drop:
+            - ALL
