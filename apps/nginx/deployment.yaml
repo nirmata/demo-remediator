@@ -24,6 +24,7 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
+          hostPort: 80
         resources:
           requests:
             memory: "300Mi"
@@ -32,10 +33,7 @@ spec:
             memory: "2800Mi"
             cpu: "5000m"
         securityContext:
-          allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          runAsUser: 65534
-          readOnlyRootFilesystem: true
+          privileged: true
           capabilities:
-            drop:
-            - ALL
+            add:
+            - SYS_ADMIN
