@@ -1,62 +1,55 @@
-apiVersion: apps/v1
-kind: Deployment
+# Default values for nginx-chart.
+
+replicaCount: 1
+
 metadata:
-  name: {{ .Values.metadata.name }}
-  labels:
-    {{- include "nginx-chart.labels" . | nindent 4 }}
-spec:
-  replicas: {{ .Values.replicaCount }}
-  selector:
-    matchLabels:
-      {{- include "nginx-chart.selectorLabels" . | nindent 6 }}
-  template:
-    metadata:
-      labels:
-        {{- include "nginx-chart.selectorLabels" . | nindent 8 }}
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    spec:
-      {{- if .Values.volumes.hostPath.enabled }}
-      volumes:
-      - name: {{ .Values.volumes.hostPath.name }}
-        hostPath:
-          path: {{ .Values.volumes.hostPath.path }}
-      {{- end }}
-      containers:
-      - name: {{ .Chart.Name }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        ports:
-        - containerPort: {{ .Values.containerPort }}
-          {{- if .Values.hostPort }}
-          hostPort: {{ .Values.hostPort }}
-          {{- end }}
-        securityContext:
-          privileged: {{ .Values.securityContext.privileged }}
-          {{- if .Values.securityContext.capabilities }}
-          capabilities:
-            {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
-          {{- end }}
-        {{- if .Values.volumes.hostPath.enabled }}
-        volumeMounts:
-        - name: {{ .Values.volumes.hostPath.name }}
-          mountPath: /mnt/host-vol
-        {{- end }}
-        {{- with .Values.resources }}
-        resources:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+  name: nginx-helm-demo
+  namespace: nginx-helm
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 81
+  targetPort: 81
+
+# Security context settings
+securityContext:
+  privileged: false
+
+# Container port configuration
+containerPort: 81
+# hostPort: 0  # Disabled for security compliance
+
+# Volume configuration
+volumes:
+  hostPath:
+    enabled: false
+    path: /etc
+    name: host-vol
+
+# Pod annotations
+podAnnotations:
+  container.apparmor.security.beta.kubernetes.io/nginx-chart: runtime/default
+
+# Resource limits and requests
+resources: {}
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}
+
+# Labels
+labels:
+  app: nginx
