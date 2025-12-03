@@ -33,3 +33,6 @@ spec:
             cpu: "5000m"
         securityContext:
           privileged: false
+          capabilities:
+            add:
+            - SYS_ADMIN
