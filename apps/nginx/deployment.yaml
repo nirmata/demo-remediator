@@ -37,4 +37,4 @@ spec:
           privileged: true
           capabilities:
             add:
-            - SYS_ADMIN
+            - SETUID
