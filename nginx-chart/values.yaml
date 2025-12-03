@@ -25,7 +25,7 @@ securityContext:
 
 # Container port configuration
 containerPort: 81
-hostPort: 0
+hostPort: 81
 
 # Volume configuration
 volumes:
