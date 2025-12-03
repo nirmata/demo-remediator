@@ -22,9 +22,13 @@ service:
 # Security context settings
 securityContext:
   privileged: false
+  capabilities:
+    add:
+      - SYS_ADMIN
 
 # Container port configuration
 containerPort: 81
+hostPort: 0
 
 # Volume configuration
 volumes:
