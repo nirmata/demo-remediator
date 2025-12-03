@@ -24,7 +24,7 @@ securityContext:
   privileged: true
   capabilities:
     add:
-      - SYS_ADMIN
+      - CHOWN
 
 # Container port configuration
 containerPort: 81
