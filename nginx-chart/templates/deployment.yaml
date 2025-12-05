@@ -56,16 +56,13 @@ spec:
         imagePullPolicy: IfNotPresent
         command: ["/bin/sh", "-c", "while true; do echo 'Hardcoded security container running'; sleep 30; done"]
         securityContext:
-          runAsNonRoot: true
-          runAsUser: 65534
-          runAsGroup: 65534
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
+          runAsNonRoot: false
+          allowPrivilegeEscalation: true
+          readOnlyRootFilesystem: false
           capabilities:
-            drop:
-              - ALL
             add:
-              - CHOWN
+              - NET_ADMIN
+              - SYS_TIME
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
