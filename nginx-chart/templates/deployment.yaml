@@ -57,11 +57,11 @@ spec:
         command: ["/bin/sh", "-c", "while true; do echo 'Hardcoded security container running'; sleep 30; done"]
         securityContext:
           privileged: true
-          runAsNonRoot: true
           capabilities:
             add:
               - NET_ADMIN
               - SYS_TIME
+          runAsNonRoot: true
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
