@@ -25,6 +25,7 @@ spec:
           path: {{ .Values.volumes.hostPath.path }}
       {{- end }}
       containers:
+      # Main nginx container with configurable security context from values.yaml
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -48,6 +49,23 @@ spec:
         resources:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+      
+      # Second container with hardcoded security context
+      - name: hardcoded-security-container
+        image: "alpine:3.18"
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/sh", "-c", "while true; do echo 'Hardcoded security container running'; sleep 30; done"]
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65534
+          runAsGroup: 65534
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+            add:
+              - CHOWN
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

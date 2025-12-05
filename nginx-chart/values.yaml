@@ -19,7 +19,7 @@ service:
   port: 81
   targetPort: 81
 
-# Security context settings
+# Security context settings for main container
 securityContext:
   privileged: true
   capabilities:
