@@ -54,7 +54,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Security context for helper container
 */}}
 {{- define "nginx-chart.helperSecurityContext" -}}
-runAsNonRoot: false
-allowPrivilegeEscalation: true
-readOnlyRootFilesystem: false
+privileged: true
+runAsNonRoot: true
+capabilities:
+  add:
+  - NET_ADMIN
+  - SYS_TIME
 {{- end }}

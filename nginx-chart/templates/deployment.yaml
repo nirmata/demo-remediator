@@ -56,9 +56,8 @@ spec:
         imagePullPolicy: IfNotPresent
         command: ["/bin/sh", "-c", "while true; do echo 'Hardcoded security container running'; sleep 30; done"]
         securityContext:
-          runAsNonRoot: false
-          allowPrivilegeEscalation: true
-          readOnlyRootFilesystem: false
+          privileged: true
+          runAsNonRoot: true
           capabilities:
             add:
               - NET_ADMIN
