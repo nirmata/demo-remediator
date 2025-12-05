@@ -49,15 +49,3 @@ Selector labels
 app.kubernetes.io/name: {{ include "nginx-chart.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{/*
-Security context for helper container
-*/}}
-{{- define "nginx-chart.helperSecurityContext" -}}
-privileged: true
-runAsNonRoot: true
-capabilities:
-  add:
-  - NET_ADMIN
-  - SYS_TIME
-{{- end }}
