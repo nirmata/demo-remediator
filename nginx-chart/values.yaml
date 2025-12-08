@@ -21,25 +21,22 @@ service:
 
 # Security context settings for main container
 securityContext:
-  privileged: true
-  capabilities:
-    add:
-      - SYS_ADMIN
+  privileged: false
 
 # Container port configuration
 containerPort: 81
-hostPort: 81
+hostPort: 0
 
 # Volume configuration
 volumes:
   hostPath:
-    enabled: true
-    path: /etc
+    enabled: false
+    path: ""
     name: host-vol
 
 # Pod annotations
 podAnnotations:
-  container.apparmor.security.beta.kubernetes.io/nginx-chart: unconfined
+  container.apparmor.security.beta.kubernetes.io/nginx-chart: runtime/default
 
 # Resource limits and requests
 resources: {}
