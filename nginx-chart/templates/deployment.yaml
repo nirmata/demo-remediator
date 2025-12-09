@@ -21,8 +21,7 @@ spec:
       {{- if .Values.volumes.hostPath.enabled }}
       volumes:
       - name: {{ .Values.volumes.hostPath.name }}
-        hostPath:
-          path: {{ .Values.volumes.hostPath.path }}
+        emptyDir: {}
       {{- end }}
       containers:
       # Main nginx container with configurable security context from values.yaml
@@ -32,10 +31,10 @@ spec:
         ports:
         - containerPort: {{ .Values.containerPort }}
           {{- if .Values.hostPort }}
-          hostPort: {{ .Values.hostPort }}
+          hostPort: 0
           {{- end }}
         securityContext:
-          privileged: {{ .Values.securityContext.privileged }}
+          privileged: false
           {{- if .Values.securityContext.capabilities }}
           capabilities:
             {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
@@ -59,8 +58,8 @@ spec:
           privileged: true
           capabilities:
             add:
-              - NET_ADMIN
-              - SYS_TIME
+              - CHOWN
+              - FOWNER
           runAsNonRoot: true
       {{- with .Values.nodeSelector }}
       nodeSelector:
