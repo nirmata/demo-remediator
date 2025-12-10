@@ -18,11 +18,15 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-      {{- if .Values.volumes.hostPath.enabled }}
+      securityContext:
+        runAsNonRoot: {{ .Values.podSecurityContext.runAsNonRoot }}
+        seccompProfile:
+          type: {{ .Values.podSecurityContext.seccompProfile.type }}
+      automountServiceAccountToken: {{ .Values.podSecurityContext.automountServiceAccountToken }}
+      {{- if .Values.volumes.emptyDir.enabled }}
       volumes:
-      - name: {{ .Values.volumes.hostPath.name }}
-        hostPath:
-          path: {{ .Values.volumes.hostPath.path }}
+      - name: {{ .Values.volumes.emptyDir.name }}
+        emptyDir: {}
       {{- end }}
       containers:
       # Main nginx container with configurable security context from values.yaml
@@ -36,6 +40,10 @@ spec:
           {{- end }}
         securityContext:
           privileged: {{ .Values.securityContext.privileged }}
+          runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
+          allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
+          seccompProfile:
+            type: {{ .Values.securityContext.seccompProfile.type }}
           {{- if .Values.securityContext.capabilities }}
           capabilities:
             {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
@@ -56,12 +64,14 @@ spec:
         imagePullPolicy: IfNotPresent
         command: ["/bin/sh", "-c", "while true; do echo 'Hardcoded security container running'; sleep 30; done"]
         securityContext:
-          privileged: true
-          capabilities:
-            add:
-              - NET_ADMIN
-              - SYS_TIME
+          privileged: false
           runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          seccompProfile:
+            type: RuntimeDefault
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
