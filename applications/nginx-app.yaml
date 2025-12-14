@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/nirmata/demo-remediator.git
     targetRevision: helm_chart
-    path: nginx-chart
+    path: apps/nginx-chart
     helm:
       valueFiles:
         - values.yaml
