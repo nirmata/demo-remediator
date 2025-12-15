@@ -18,6 +18,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken | default false }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- if .Values.volumes.hostPath.enabled }}
       volumes:
       - name: {{ .Values.volumes.hostPath.name }}
@@ -36,9 +39,14 @@ spec:
           {{- end }}
         securityContext:
           privileged: {{ .Values.securityContext.privileged }}
+          runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
+          allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
+          seccompProfile:
+            {{- toYaml .Values.securityContext.seccompProfile | nindent 12 }}
           {{- if .Values.securityContext.capabilities }}
           capabilities:
-            {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
+            drop:
+              {{- toYaml .Values.securityContext.capabilities.drop | nindent 14 }}
           {{- end }}
         {{- if .Values.volumes.hostPath.enabled }}
         volumeMounts:
@@ -56,12 +64,14 @@ spec:
         imagePullPolicy: IfNotPresent
         command: ["/bin/sh", "-c", "while true; do echo 'Hardcoded security container running'; sleep 30; done"]
         securityContext:
-          privileged: true
-          capabilities:
-            add:
-              - NET_ADMIN
-              - SYS_TIME
+          privileged: false
           runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          seccompProfile:
+            type: RuntimeDefault
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
