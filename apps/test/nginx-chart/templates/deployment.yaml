@@ -18,11 +18,21 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
+      automountServiceAccountToken: {{ .Values.podSecurityContext.automountServiceAccountToken }}
+      securityContext:
+        runAsNonRoot: {{ .Values.podSecurityContext.runAsNonRoot }}
+        seccompProfile:
+          type: {{ .Values.podSecurityContext.seccompProfile.type }}
       {{- if .Values.volumes.hostPath.enabled }}
       volumes:
       - name: {{ .Values.volumes.hostPath.name }}
         hostPath:
           path: {{ .Values.volumes.hostPath.path }}
+      {{- end }}
+      {{- if .Values.volumes.emptyDir.enabled }}
+      volumes:
+      - name: {{ .Values.volumes.emptyDir.name }}
+        emptyDir: {}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
@@ -35,6 +45,10 @@ spec:
           {{- end }}
         securityContext:
           privileged: {{ .Values.securityContext.privileged }}
+          allowPrivilegeEscalation: {{ .Values.containerSecurityContext.allowPrivilegeEscalation }}
+          runAsNonRoot: {{ .Values.containerSecurityContext.runAsNonRoot }}
+          seccompProfile:
+            type: {{ .Values.containerSecurityContext.seccompProfile.type }}
           {{- if .Values.securityContext.capabilities }}
           capabilities:
             {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
@@ -43,6 +57,11 @@ spec:
         volumeMounts:
         - name: {{ .Values.volumes.hostPath.name }}
           mountPath: /mnt/host-vol
+        {{- end }}
+        {{- if .Values.volumes.emptyDir.enabled }}
+        volumeMounts:
+        - name: {{ .Values.volumes.emptyDir.name }}
+          mountPath: /mnt/app-vol
         {{- end }}
         {{- with .Values.resources }}
         resources:
