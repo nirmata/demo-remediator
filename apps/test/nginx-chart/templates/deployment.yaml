@@ -18,11 +18,24 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
+      automountServiceAccountToken: {{ .Values.podSecurityContext.automountServiceAccountToken }}
+      securityContext:
+        runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+        seccompProfile:
+          type: {{ .Values.securityContext.seccompProfile.type }}
       {{- if .Values.volumes.hostPath.enabled }}
       volumes:
       - name: {{ .Values.volumes.hostPath.name }}
         hostPath:
           path: {{ .Values.volumes.hostPath.path }}
+      {{- end }}
+      {{- if .Values.volumes.emptyDir.enabled }}
+      {{- if not .Values.volumes.hostPath.enabled }}
+      volumes:
+      {{- end }}
+      - name: {{ .Values.volumes.emptyDir.name }}
+        emptyDir: {}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
@@ -35,14 +48,28 @@ spec:
           {{- end }}
         securityContext:
           privileged: {{ .Values.securityContext.privileged }}
+          runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
+          allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
+          seccompProfile:
+            type: {{ .Values.securityContext.seccompProfile.type }}
           {{- if .Values.securityContext.capabilities }}
           capabilities:
-            {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
+            drop:
+              {{- range .Values.securityContext.capabilities.drop }}
+              - {{ . }}
+              {{- end }}
           {{- end }}
         {{- if .Values.volumes.hostPath.enabled }}
         volumeMounts:
         - name: {{ .Values.volumes.hostPath.name }}
           mountPath: /mnt/host-vol
+        {{- end }}
+        {{- if .Values.volumes.emptyDir.enabled }}
+        {{- if not .Values.volumes.hostPath.enabled }}
+        volumeMounts:
+        {{- end }}
+        - name: {{ .Values.volumes.emptyDir.name }}
+          mountPath: /mnt/app-storage
         {{- end }}
         {{- with .Values.resources }}
         resources:
