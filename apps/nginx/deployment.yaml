@@ -4,6 +4,7 @@ metadata:
   name: nginx
   labels:
     app: nginx
+    demo: test
   annotations:
     container.apparmor.security.beta.kubernetes.io/nginx: unconfined
 spec:
