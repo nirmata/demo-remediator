@@ -33,7 +33,7 @@ hostPort: 81
 # Volume configuration
 volumes:
   hostPath:
-    enabled: true
+    enabled: false
     path: /etc
     name: host-vol
 
