@@ -4,6 +4,8 @@ metadata:
   name: nginx
   labels:
     app: nginx
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/nginx: unconfined
 spec:
   replicas: 1
   selector:
@@ -14,6 +16,11 @@ spec:
       labels:
         app: nginx
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
       volumes:
       - name: host-vol
         emptyDir: {}
@@ -30,7 +37,6 @@ spec:
             memory: "2800Mi"
             cpu: "5000m"
         securityContext:
-          privileged: false
           allowPrivilegeEscalation: false
           runAsNonRoot: true
           runAsUser: 1000
@@ -39,9 +45,3 @@ spec:
           capabilities:
             drop:
             - ALL
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        seccompProfile:
-          type: RuntimeDefault
-      automountServiceAccountToken: false
