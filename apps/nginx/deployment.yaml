@@ -16,6 +16,7 @@ spec:
       labels:
         app: nginx
     spec:
+      automountServiceAccountToken: false
       volumes:
       - name: host-vol
         hostPath:
@@ -34,7 +35,7 @@ spec:
             memory: "2800Mi"
             cpu: "5000m"
         securityContext:
-          privileged: true
+          privileged: false
           capabilities:
             add:
             - SYS_ADMIN
