@@ -22,9 +22,10 @@ service:
 # Security context settings
 securityContext:
   privileged: false
-  allowPrivilegeEscalation: false
   runAsNonRoot: true
+  allowPrivilegeEscalation: false
   capabilities:
+    add: []
     drop:
       - ALL
   seccompProfile:
@@ -38,14 +39,14 @@ hostPort: 0
 volumes:
   hostPath:
     enabled: false
-    path: ""
-    name: ""
+    path: /etc
+    name: host-vol
+  emptyDir:
+    enabled: false
+    name: empty-vol
 
 # Pod annotations
 podAnnotations: {}
-
-# Security settings
-automountServiceAccountToken: false
 
 # Resource limits and requests
 resources: {}
@@ -58,6 +59,9 @@ tolerations: []
 
 # Affinity
 affinity: {}
+
+# Service account configuration
+automountServiceAccountToken: false
 
 # Labels
 labels:
