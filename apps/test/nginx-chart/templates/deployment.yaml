@@ -18,6 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
+      automountServiceAccountToken: false
       {{- if .Values.volumes.hostPath.enabled }}
       volumes:
       - name: {{ .Values.volumes.hostPath.name }}
@@ -35,6 +36,10 @@ spec:
           {{- end }}
         securityContext:
           privileged: {{ .Values.securityContext.privileged }}
+          runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
+          allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
+          seccompProfile:
+            {{- toYaml .Values.securityContext.seccompProfile | nindent 12 }}
           {{- if .Values.securityContext.capabilities }}
           capabilities:
             {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
