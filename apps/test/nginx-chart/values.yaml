@@ -21,25 +21,28 @@ service:
 
 # Security context settings
 securityContext:
-  privileged: true
+  privileged: false
+  allowPrivilegeEscalation: false
+  runAsNonRoot: true
   capabilities:
-    add:
-      - SYS_ADMIN
+    drop:
+      - ALL
+  seccompProfile:
+    type: RuntimeDefault
 
 # Container port configuration
 containerPort: 81
-hostPort: 81
+hostPort: 0
 
 # Volume configuration
 volumes:
   hostPath:
-    enabled: true
+    enabled: false
     path: /etc
     name: host-vol
 
 # Pod annotations
-podAnnotations:
-  container.apparmor.security.beta.kubernetes.io/nginx-chart: unconfined
+podAnnotations: {}
 
 # Resource limits and requests
 resources: {}
@@ -52,6 +55,15 @@ tolerations: []
 
 # Affinity
 affinity: {}
+
+# Pod security settings
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+# Service account settings
+automountServiceAccountToken: false
 
 # Labels
 labels:
