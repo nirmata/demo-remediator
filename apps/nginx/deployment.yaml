@@ -16,10 +16,12 @@ spec:
       labels:
         app: nginx
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       volumes:
       - name: host-vol
-        hostPath:
-          path: /etc
+        emptyDir: {}
       containers:
       - name: nginx
         image: nginx:latest
@@ -35,6 +37,8 @@ spec:
             cpu: "5000m"
         securityContext:
           privileged: true
+          seccompProfile:
+            type: RuntimeDefault
           capabilities:
             add:
             - SYS_ADMIN
