@@ -1,0 +1,29 @@
+---
+spec:
+  exceptions:
+  - ruleNames:
+    - "check-image-keyless"
+    - "autogen-check-image-keyless"
+    policyName: "check-image-keyless"
+  - ruleNames:
+    - "restricted-volumes"
+    - "autogen-restricted-volumes"
+    policyName: "restrict-volume-types"
+  - ruleNames:
+    - "host-path"
+    - "autogen-host-path"
+    policyName: "disallow-host-path"
+  match:
+    any:
+    - resources:
+        namespaces: []
+        kinds:
+        - "*"
+        names: []
+kind: "PolicyException"
+apiVersion: "kyverno.io/v2beta1"
+metadata:
+  name: "policy-exc-req-remediator-demo-0"
+  namespace: "kyverno"
+  labels:
+    cleanup.kyverno.io/ttl: "2026-02-26T105700Z"
