@@ -21,6 +21,7 @@ spec:
         runAsUser: 65534
         seccompProfile:
           type: RuntimeDefault
+      automountServiceAccountToken: false
       volumes:
       - name: host-vol
         emptyDir: {}
