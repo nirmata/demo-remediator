@@ -1,0 +1,22 @@
+---
+apiVersion: "kyverno.io/v2beta1"
+kind: "PolicyException"
+metadata:
+  labels:
+    cleanup.kyverno.io/ttl: "2026-03-04T114408Z"
+  name: "per-demo-remediator-pr507-1c3x5uwr-0"
+  namespace: "kyverno"
+spec:
+  exceptions:
+  - policyName: "disallow-host-ports"
+    ruleNames:
+    - "autogen-host-ports-none"
+    - "autogen-autogen-host-ports-none"
+  match:
+    any:
+    - resources:
+        kinds:
+        - "Deployment"
+        names:
+        - "nginx"
+        namespaces: []
