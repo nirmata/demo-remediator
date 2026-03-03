@@ -16,10 +16,12 @@ spec:
       labels:
         app: nginx
     spec:
+      volumes:
+      - name: host-vol
       securityContext:
-        runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
+        runAsNonRoot: true
       volumes:
       - name: host-vol
         emptyDir: {}
@@ -36,7 +38,6 @@ spec:
             memory: "2800Mi"
             cpu: "5000m"
         securityContext:
-          privileged: false
           allowPrivilegeEscalation: false
           runAsNonRoot: true
           seccompProfile:
