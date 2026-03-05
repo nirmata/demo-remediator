@@ -7,6 +7,10 @@ metadata:
   annotations:
     container.apparmor.security.beta.kubernetes.io/nginx: unconfined
 spec:
+  securityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
   replicas: 1
   selector:
     matchLabels:
@@ -18,14 +22,12 @@ spec:
     spec:
       volumes:
       - name: host-vol
-        hostPath:
-          path: /etc
+        emptyDir: {}
       containers:
       - name: nginx
         image: nginx:latest
         ports:
         - containerPort: 80
-          hostPort: 80
         resources:
           requests:
             memory: "300Mi"
@@ -34,7 +36,9 @@ spec:
             memory: "2800Mi"
             cpu: "5000m"
         securityContext:
-          privileged: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
           capabilities:
-            add:
-            - SYS_ADMIN
+            drop:
+            - ALL
