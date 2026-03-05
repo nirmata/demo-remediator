@@ -4,7 +4,13 @@ metadata:
   name: nginx
   labels:
     app: nginx
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/nginx: unconfined
 spec:
+  securityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
   replicas: 1
   selector:
     matchLabels:
@@ -30,8 +36,6 @@ spec:
             memory: "2800Mi"
             cpu: "5000m"
         securityContext:
-          privileged: false
-          allowPrivilegeEscalation: false
           runAsNonRoot: true
           seccompProfile:
             type: RuntimeDefault
