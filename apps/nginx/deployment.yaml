@@ -16,6 +16,10 @@ spec:
       labels:
         app: nginx
     spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       volumes:
       - name: host-vol
         emptyDir: {}
@@ -33,10 +37,9 @@ spec:
             cpu: "5000m"
         securityContext:
           privileged: false
-          allowPrivilegeEscalation: false
           runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
           capabilities:
             drop:
             - ALL
-          seccompProfile:
-            type: RuntimeDefault
