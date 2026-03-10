@@ -16,14 +16,13 @@ spec:
       labels:
         app: nginx
     spec:
-      securityContext:
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
-      automountServiceAccountToken: false
       volumes:
       - name: host-vol
         emptyDir: {}
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: nginx
         image: nginx:latest
@@ -38,8 +37,8 @@ spec:
             cpu: "5000m"
         securityContext:
           privileged: false
-          allowPrivilegeEscalation: false
           runAsNonRoot: true
+          allowPrivilegeEscalation: false
           seccompProfile:
             type: RuntimeDefault
           capabilities:
