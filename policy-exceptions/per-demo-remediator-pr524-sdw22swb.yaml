@@ -1,0 +1,22 @@
+---
+apiVersion: "kyverno.io/v2beta1"
+kind: "PolicyException"
+metadata:
+  labels:
+    cleanup.kyverno.io/ttl: "2026-03-11T085727Z"
+  name: "per-demo-remediator-pr524-sdw22swb-0"
+  namespace: "kyverno"
+spec:
+  exceptions:
+  - policyName: "restrict-seccomp-strict"
+    ruleNames:
+    - "autogen-check-seccomp-strict"
+    - "autogen-autogen-check-seccomp-strict"
+  match:
+    any:
+    - resources:
+        kinds:
+        - "Deployment"
+        names:
+        - "nginx"
+        namespaces: []
