@@ -16,6 +16,8 @@ spec:
       labels:
         app: nginx
     spec:
+      securityContext:
+        runAsNonRoot: true
       volumes:
       - name: host-vol
         hostPath:
@@ -23,6 +25,8 @@ spec:
       containers:
       - name: nginx
         image: nginx:latest
+        securityContext:
+          runAsNonRoot: true
         ports:
         - containerPort: 80
           hostPort: 80
