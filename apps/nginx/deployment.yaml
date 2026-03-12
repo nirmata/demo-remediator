@@ -23,6 +23,7 @@ spec:
       volumes:
       - name: host-vol
         emptyDir: {}
+      automountServiceAccountToken: false
       containers:
       - name: nginx
         image: nginx:latest
