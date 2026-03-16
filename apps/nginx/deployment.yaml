@@ -25,6 +25,7 @@ spec:
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
+      automountServiceAccountToken: false
       containers:
       - name: nginx
         image: nginx:latest
