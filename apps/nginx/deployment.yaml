@@ -20,6 +20,10 @@ spec:
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
+      automountServiceAccountToken: false
+      volumes:
+      - name: host-vol
+        emptyDir: {}
       volumes:
       - name: host-vol
         emptyDir: {}
