@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-02
+  labels:
+    app: nginx
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/nginx: unconfined
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx-02
+        image: nginx:latest
