@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
+  namespace: app-namespace
   labels:
     app: nginx
   annotations:
@@ -13,8 +14,10 @@ spec:
       app: nginx
   template:
     metadata:
+      namespace: app-namespace
       labels:
         app: nginx
+        app.kubernetes.io/name: nginx
     spec:
       automountServiceAccountToken: false
       volumes:
@@ -22,9 +25,21 @@ spec:
         emptyDir: {}
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:1.21
         ports:
         - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
         resources:
           requests:
             memory: "300Mi"
@@ -35,9 +50,11 @@ spec:
         securityContext:
           privileged: false
           allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
           runAsNonRoot: true
           capabilities:
             drop:
             - ALL
+            - CAP_NET_RAW
           seccompProfile:
             type: RuntimeDefault
