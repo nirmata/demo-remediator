@@ -4,6 +4,7 @@ metadata:
   name: nginx
   labels:
     app: nginx
+  namespace: production
   annotations:
     container.apparmor.security.beta.kubernetes.io/nginx: unconfined
 spec:
@@ -15,6 +16,8 @@ spec:
     metadata:
       labels:
         app: nginx
+        app.kubernetes.io/name: nginx
+      namespace: production
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -26,7 +29,7 @@ spec:
         emptyDir: {}
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:1.25
         ports:
         - containerPort: 80
           hostPort: 0
@@ -46,3 +49,11 @@ spec:
           capabilities:
             drop:
             - ALL
+            - CAP_NET_RAW
+          readOnlyRootFilesystem: true
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
