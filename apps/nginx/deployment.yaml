@@ -2,8 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
+  namespace: production
   labels:
     app: nginx
+    app.kubernetes.io/name: nginx
 spec:
   replicas: 1
   selector:
@@ -11,17 +13,31 @@ spec:
       app: nginx
   template:
     metadata:
+      namespace: production
       labels:
         app: nginx
+        app.kubernetes.io/name: nginx
     spec:
       volumes:
       - name: host-vol
         emptyDir: {}
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:1.25.3
         ports:
         - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
         resources:
           requests:
             memory: "300Mi"
@@ -32,11 +48,13 @@ spec:
         securityContext:
           runAsNonRoot: true
           allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
           seccompProfile:
             type: RuntimeDefault
           capabilities:
             drop:
             - ALL
+            - CAP_NET_RAW
       securityContext:
         runAsNonRoot: true
         seccompProfile:
