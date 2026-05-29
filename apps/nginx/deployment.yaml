@@ -2,8 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
+  namespace: nginx-namespace
   labels:
     app: nginx
+    app.kubernetes.io/name: nginx
   annotations:
     container.apparmor.security.beta.kubernetes.io/nginx: unconfined
 spec:
@@ -13,8 +15,10 @@ spec:
       app: nginx
   template:
     metadata:
+      namespace: nginx-namespace
       labels:
         app: nginx
+        app.kubernetes.io/name: nginx
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -27,9 +31,15 @@ spec:
         emptyDir: {}
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:1.25
         ports:
         - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
         resources:
           requests:
             memory: "300Mi"
@@ -40,10 +50,12 @@ spec:
         securityContext:
           privileged: false
           allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 1001
           capabilities:
             drop:
             - ALL
+            - CAP_NET_RAW
           seccompProfile:
             type: RuntimeDefault
