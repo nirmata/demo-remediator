@@ -14,16 +14,16 @@ spec:
       app: nginx
   template:
     metadata:
+      namespace: production
       labels:
         app: nginx
         app.kubernetes.io/name: nginx
-      namespace: production
     spec:
-      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
+      automountServiceAccountToken: false
       volumes:
       - name: host-vol
         emptyDir: {}
@@ -54,11 +54,11 @@ spec:
         securityContext:
           privileged: false
           allowPrivilegeEscalation: false
-          runAsNonRoot: true
           readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
           capabilities:
             drop:
             - ALL
             - CAP_NET_RAW
-          seccompProfile:
-            type: RuntimeDefault
