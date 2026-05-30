@@ -19,6 +19,7 @@ spec:
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
+        runAsUser: 1000
         seccompProfile:
           type: RuntimeDefault
       volumes:
@@ -40,8 +41,9 @@ spec:
           privileged: false
           allowPrivilegeEscalation: false
           runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
           capabilities:
             drop:
             - ALL
-          seccompProfile:
-            type: RuntimeDefault
