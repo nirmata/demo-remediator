@@ -16,12 +16,11 @@ spec:
       labels:
         app: nginx
     spec:
-      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
         seccompProfile:
           type: RuntimeDefault
+      automountServiceAccountToken: false
       volumes:
       - name: host-vol
         emptyDir: {}
@@ -41,7 +40,6 @@ spec:
           privileged: false
           allowPrivilegeEscalation: false
           runAsNonRoot: true
-          runAsUser: 1000
           seccompProfile:
             type: RuntimeDefault
           capabilities:
