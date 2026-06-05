@@ -24,6 +24,7 @@ spec:
                 runAsUser: 1000
                 seccompProfile:
                     type: RuntimeDefault
+            automountServiceAccountToken: false
             containers:
                 - image: nginx:1.21
                   name: nginx
