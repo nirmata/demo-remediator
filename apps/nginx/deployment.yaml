@@ -6,6 +6,7 @@ metadata:
     app: nginx
   annotations:
     container.apparmor.security.beta.kubernetes.io/nginx: unconfined
+  namespace: web-apps
 spec:
   replicas: 1
   selector:
@@ -15,17 +16,22 @@ spec:
     metadata:
       labels:
         app: nginx
+        app.kubernetes.io/name: nginx
+      namespace: web-apps
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        seccompProfile:
+          type: RuntimeDefault
       volumes:
       - name: host-vol
-        hostPath:
-          path: /etc
+        emptyDir: {}
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:1.22.1
         ports:
         - containerPort: 80
-          hostPort: 80
         resources:
           requests:
             memory: "128Mi"
@@ -34,7 +40,25 @@ spec:
             memory: "256Mi"
             cpu: "300m"
         securityContext:
-          privileged: true
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1001
+          seccompProfile:
+            type: RuntimeDefault
           capabilities:
-            add:
-            - SYS_ADMIN
+            drop:
+            - ALL
+            - CAP_NET_RAW
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
