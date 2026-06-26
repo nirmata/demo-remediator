@@ -5,7 +5,7 @@ metadata:
   labels:
     app: nginx
     nirmata.io/resource-optimization: "enabled"
-    nirmata.io/remediation-path: "create-pr"
+    nirmata.io/remediation-path: "auto-merge"
   annotations:
     container.apparmor.security.beta.kubernetes.io/nginx: unconfined
 spec:
