@@ -17,16 +17,20 @@ spec:
       labels:
         app: nginx
     spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        seccompProfile:
+          type: RuntimeDefault
       volumes:
       - name: host-vol
-        hostPath:
-          path: /etc
+        emptyDir: {}
       containers:
       - name: nginx
         image: nginx:latest
         ports:
         - containerPort: 80
-          hostPort: 80
         resources:
           requests:
             memory: "300Mi"
@@ -35,7 +39,12 @@ spec:
             memory: "2800Mi"
             cpu: "5000m"
         securityContext:
-          privileged: true
+          privileged: false
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1001
+          seccompProfile:
+            type: RuntimeDefault
           capabilities:
-            add:
-            - SYS_ADMIN
+            drop:
+            - ALL
