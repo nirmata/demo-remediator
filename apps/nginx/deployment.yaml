@@ -30,8 +30,8 @@ spec:
           hostPort: 80
         resources:
           requests:
-            memory: "64Mi"
-            cpu: "50m"
+            memory: "300Mi"
+            cpu: "500m"
           limits:
             memory: "2800Mi"
             cpu: "5000m"
