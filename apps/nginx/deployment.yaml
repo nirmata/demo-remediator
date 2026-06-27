@@ -19,8 +19,7 @@ spec:
     spec:
       volumes:
       - name: host-vol
-        hostPath:
-          path: /etc
+        emptyDir: {}
       containers:
       - name: nginx
         image: nginx:latest
@@ -39,3 +38,5 @@ spec:
           capabilities:
             add:
             - SYS_ADMIN
+          seccompProfile:
+            type: RuntimeDefault
