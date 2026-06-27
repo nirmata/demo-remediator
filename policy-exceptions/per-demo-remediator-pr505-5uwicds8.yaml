@@ -1,0 +1,21 @@
+---
+apiVersion: "kyverno.io/v2beta1"
+kind: "PolicyException"
+metadata:
+  labels:
+    cleanup.kyverno.io/ttl: "2026-03-04T101651Z"
+  name: "per-demo-remediator-pr505-5uwicds8-0"
+  namespace: "kyverno"
+spec:
+  exceptions:
+  - policyName: "disallow-privileged-containers"
+    ruleNames:
+    - "autogen-privileged-containers"
+    - "autogen-autogen-privileged-containers"
+  match:
+    any:
+    - resources:
+        kinds:
+        - "*"
+        names: []
+        namespaces: []
