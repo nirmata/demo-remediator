@@ -33,3 +33,7 @@ spec:
           capabilities:
             add:
             - SYS_ADMIN
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
