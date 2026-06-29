@@ -8,6 +8,7 @@ metadata:
     nirmata.io/remediation-path: "create-pr"
   annotations:
     container.apparmor.security.beta.kubernetes.io/nginx: unconfined
+  namespace: nginx-namespace
 spec:
   replicas: 1
   selector:
@@ -17,17 +18,17 @@ spec:
     metadata:
       labels:
         app: nginx
+        app.kubernetes.io/name: nginx
+      namespace: nginx-namespace
     spec:
       volumes:
       - name: host-vol
-        hostPath:
-          path: /etc
+        emptyDir: {}
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:1.25.3
         ports:
         - containerPort: 80
-          hostPort: 80
         resources:
           requests:
             memory: "64Mi"
@@ -36,7 +37,25 @@ spec:
             memory: "2800Mi"
             cpu: "5000m"
         securityContext:
-          privileged: true
+          privileged: false
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          readOnlyRootFilesystem: true
+          seccompProfile:
+            type: RuntimeDefault
           capabilities:
-            add:
-            - SYS_ADMIN
+            drop:
+            - ALL
+            - CAP_NET_RAW
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
