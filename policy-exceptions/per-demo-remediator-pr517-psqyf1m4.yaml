@@ -1,0 +1,22 @@
+---
+apiVersion: "kyverno.io/v2beta1"
+kind: "PolicyException"
+metadata:
+  labels:
+    cleanup.kyverno.io/ttl: "2026-03-06T094020Z"
+  name: "per-demo-remediator-pr517-psqyf1m4-0"
+  namespace: "kyverno"
+spec:
+  exceptions:
+  - policyName: "disallow-privilege-escalation"
+    ruleNames:
+    - "autogen-privilege-escalation"
+    - "autogen-autogen-privilege-escalation"
+  match:
+    any:
+    - resources:
+        kinds:
+        - "Deployment"
+        names:
+        - "nginx"
+        namespaces: []
