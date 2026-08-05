@@ -2,8 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
+  namespace: nginx-system
   labels:
     app: nginx
+    app.kubernetes.io/name: nginx
     nirmata.io/resource-optimization: "enabled"
     nirmata.io/remediation-path: "create-pr"
   annotations:
@@ -15,26 +17,48 @@ spec:
       app: nginx
   template:
     metadata:
+      namespace: nginx-system
       labels:
         app: nginx
+        app.kubernetes.io/name: nginx
     spec:
       volumes:
       - name: host-vol
         emptyDir: {}
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:1.25
         ports:
         - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
         securityContext:
           privileged: false
           allowPrivilegeEscalation: false
           runAsNonRoot: true
+          readOnlyRootFilesystem: true
           capabilities:
             drop:
             - ALL
+            - CAP_NET_RAW
           seccompProfile:
             type: RuntimeDefault
+        resources:
+          limits:
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
       securityContext:
         runAsNonRoot: true
         seccompProfile:
