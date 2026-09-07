@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
+  namespace: production
   labels:
     app: nginx
     nirmata.io/resource-optimization: "enabled"
@@ -15,8 +16,10 @@ spec:
       app: nginx
   template:
     metadata:
+      namespace: production
       labels:
         app: nginx
+        app.kubernetes.io/name: nginx
     spec:
       volumes:
       - name: host-vol
@@ -24,16 +27,38 @@ spec:
       securityContext:
         seccompProfile:
           type: RuntimeDefault
+        runAsNonRoot: true
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:1.25.3
         ports:
         - containerPort: 80
-          hostPort: 80
         securityContext:
           seccompProfile:
             type: RuntimeDefault
-          privileged: true
+          privileged: false
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
           capabilities:
-            add:
-            - SYS_ADMIN
+            drop:
+            - ALL
+            - CAP_NET_RAW
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            memory: "256Mi"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
