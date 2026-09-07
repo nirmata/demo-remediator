@@ -2,10 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
+  namespace: kube-system
   labels:
     app: nginx
     nirmata.io/resource-optimization: "enabled"
     nirmata.io/remediation-path: "create-pr"
+    app.kubernetes.io/name: nginx
   annotations:
     container.apparmor.security.beta.kubernetes.io/nginx: unconfined
 spec:
@@ -15,8 +17,10 @@ spec:
       app: nginx
   template:
     metadata:
+      namespace: kube-system
       labels:
         app: nginx
+        app.kubernetes.io/name: nginx
       annotations:
         container.apparmor.security.beta.kubernetes.io/nginx: runtime/default
     spec:
@@ -30,15 +34,35 @@ spec:
         emptyDir: {}
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:1.25
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            memory: 256Mi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
         securityContext:
           privileged: false
           allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
           runAsNonRoot: true
           seccompProfile:
             type: RuntimeDefault
           capabilities:
             drop:
             - ALL
+            - CAP_NET_RAW
