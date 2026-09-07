@@ -20,8 +20,10 @@ spec:
     spec:
       volumes:
       - name: host-vol
-        hostPath:
-          path: /etc
+        emptyDir: {}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: nginx
         image: nginx:latest
@@ -29,6 +31,8 @@ spec:
         - containerPort: 80
           hostPort: 80
         securityContext:
+          seccompProfile:
+            type: RuntimeDefault
           privileged: true
           capabilities:
             add:
